@@ -18,14 +18,14 @@
   position: absolute;
   top: 25px;
   left: 20px;
-  background-image: url("data:image/svg+xml;charset=utf8, %3Csvg fill='rgb(255, 255, 255)' viewBox='0 0 320 512' xmlns='http://www.w3.org/2000/svg'%3E    %3Cpath d='M272 0H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h224c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48zM160 480c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm112-108c0 6.6-5.4 12-12 12H60c-6.6 0-12-5.4-12-12V60c0-6.6 5.4-12 12-12h200c6.6 0 12 5.4 12 12v312z' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=utf8, %3Csvg fill='rgb(0, 0, 0)' viewBox='0 0 320 512' xmlns='http://www.w3.org/2000/svg'%3E    %3Cpath d='M272 0H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h224c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48zM160 480c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm112-108c0 6.6-5.4 12-12 12H60c-6.6 0-12-5.4-12-12V60c0-6.6 5.4-12 12-12h200c6.6 0 12 5.4 12 12v312z' fill-rule='evenodd'/%3E%3C/svg%3E");
   background-size: 70%;
   background-position: center center;
   background-repeat: no-repeat;
   width: 35px;
   height: 45px;
   cursor: pointer;
-  color: white;
+  color: rgb(0, 0, 0);
   display: none;
 }
 #butInstall>span{
@@ -41,9 +41,9 @@
   animation: pulse 1.5s infinite;
 }
 @keyframes pulse {
-  0%{transform: scale(0.85); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
-  70%{transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
-  100%{transform: scale(0.85); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  0%{transform: scale(0.85); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7); }
+  70%{transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
+  100%{transform: scale(0.85); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
 }
 /*boton instalar pwa*/
 /*boton config*/
@@ -111,7 +111,7 @@
   text-decoration: none;
 }
 /********** enlaces ********/
-.vercion{position: absolute;right: 0;bottom: 0px;padding: 5px;}
+.vercion{position:fixed;right: 0;bottom: 0px;padding: 5px;}
 </style>  
 </head>
 <body  onload="startDB();">
@@ -181,13 +181,13 @@ window.addEventListener('appinstalled', logAppInstalled);
 function logAppInstalled(evt) { console.log('installed.', evt);} 
 /*boton instalacion pwa*/ 
 
-/*serviceWorker
+/*serviceWorker*/
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw-admin.js')
     .then((reg) => { console.log('Service worker registered.'); });
   });
-}*/
+}
 /*serviceWorker*/
 </script>
 </body>

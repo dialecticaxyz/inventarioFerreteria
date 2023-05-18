@@ -1,5 +1,5 @@
 const url = location.href.split("/")[0]+"//"+(location.href.split("/")[2]).split(":")[0]
-const serverURL = 'ws://'+(location.href.split("/")[2]).split(":")[0]
+const serverURL = 'wss://'+(location.href.split("/")[2]).split(":")[0]
 //console.log({url,serverURL})
 const token = JSON.parse((localStorage.getItem("datUser")==null||localStorage.getItem("datUser")=="")?"{}":localStorage.getItem("datUser")).tkn
 //////////////////// SECION USER ////////////////////
