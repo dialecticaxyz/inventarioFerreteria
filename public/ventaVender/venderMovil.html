@@ -11,25 +11,18 @@
   height: calc(100vh - 90px);
   overflow-y: scroll;
 }
-.conDow{
-  width: 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.buscador{display: flex;justify-content: center;}
-.brr{margin-left: 15px;margin-top: 2px;margin-right: 10px;}
+.cajaIzq{width: 40px;}
 </style>
 </head>
 <body onload="startDB();">
 <div class="conteMenu">
-  <span class="icon back" onclick="window.history.back()"></span>
+  <div class="cajaIzq">
+    <span class="icon back" onclick="window.history.back()"></span>
+    <span id="conection" class=""></span>
+  </div>
   <span class="icon address-card" onclick="lnk('clientes')"></span> 
   <span class="icon shopping" onclick="lnk('proforma')"></span> 
-  <div class="conDow">
-    <span class="icon clear" onclick="limpiar()"></span>
-    <span id="conection"></span>   
-  </div> 
+  <span class="icon clear" onclick="limpiar()"></span>
 </div>  
 
 <div class="buscador">
@@ -38,6 +31,7 @@
 </div>
 
 <div id="contenItem"></div>
+
 <script src="../js/apiBakend.js"></script>
 <script src="../js/mainDB.js"></script>
 <script>

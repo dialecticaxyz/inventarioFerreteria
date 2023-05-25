@@ -6,22 +6,24 @@
 <title>INVENTARIO</title>
 <link href="/css/estilos.css" rel="stylesheet" type="text/css" media="all" />
 <style>
-.info{width: 100px;} 
-#chart {
-  width: 100%;
-  margin: 20px 0;
+.cpacidad{
+  text-align: center;
+  padding: 10px;
 }
+#capac{font-weight: bold;}
 
 .odometro{
   position: relative;
-  width: 100vw;
-  height: 250px;
+  max-width: 300px;
+  margin: auto;
+  height: 200px;
 }
 canvas {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  width: 100%;
 }
 .text {
   color: rgb(0, 0, 0);
@@ -33,6 +35,10 @@ canvas {
   transform: translate(-50%, -50%);
 }
 
+#chart {
+  width: 100%;
+  margin-bottom: 15px;
+}
 </style>
 </head>
 <body onload="startDB();">
@@ -42,12 +48,35 @@ canvas {
   <span></span>  
 </div> 
 
+<div class="cpacidad">Capacidad maxima : <span id="capac"></span> <span class="mb">MB</span></div>
+
 <div class="odometro">
   <canvas id="canvas" height="155" width="350" ></canvas>
   <p class="text">0 %</p>
 </div>
 
 <svg id="chart"></svg>
+
+<table class="contenDatas">
+  <tbody>
+    <tr>
+      <td>Ventas</td>
+      <td id="ven"></td>
+    </tr>
+    <tr>
+      <td>Inventario</td>
+      <td id="inv"></td>
+    </tr>
+    <tr>
+      <td>Usuarios</td>
+      <td id="usu"></td>
+    </tr>
+    <tr>
+      <td>TOTAL</td>
+      <td id="tot"></td>
+    </tr>
+  </tbody>
+</table>
   
 <script src="/js/apiBakend.js"></script>
 <script src="/js/mainDB.js"></script>
@@ -75,6 +104,7 @@ function render(data) {
   newBars.merge(bar).transition().attr('width', d => xScale(d["math"]));
 }
 
+/*odometro*/
 let totalRot 
 let rotation = 0;
 let doAnim = true;
@@ -101,7 +131,7 @@ function calcPointsCirc(cx, cy, rad, dashLength) {
   }
   return points;
 }
-
+var myReq;
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const center = { x: 175, y: 175 };
@@ -164,25 +194,39 @@ function animate() {
     if (rotation > totalRot) {rotation -= (1 * Math.PI) / 180; }
   }
   text.innerHTML = Math.round((rotation / Math.PI) * 100) + 0 + "%";
-  requestAnimationFrame(animate);
+  myReq = requestAnimationFrame(animate);
 }
+setTimeout(()=>{
+  window.cancelAnimationFrame(myReq);
+},3000)
+/*odometro*/
 
-let limit = 250*1024*1024 //bytes o 250 Megabytes
+let CapacidadMegas = 250 //MB
+document.getElementById("capac").textContent = CapacidadMegas
+let limit = CapacidadMegas*1024*1024 
 async function datos(){
+  loadData()
   let dt = await sizeDB() //bytes
-  console.log(dt)
-  let tot = dt.inv + dt.use + dt.ven
-  let data = [
-    {name:'Ventas',math: ((dt.ven/tot)*100)},
-    {name:'Inventario',math: ((dt.inv/tot)*100)},
-    {name:'Usuarios',math: ((dt.use/tot)*100)},
-  ];
+  successDat()
+  setTimeout(()=>{
+    let tot = dt.inv + dt.use + dt.ven
   
-  let por = parseFloat(((tot/limit)*100).toFixed(1))
-  totalRot = ((por / 100) * 180 * Math.PI) / 180;
-  animate()
-  render(data)
-  console.log(fileSize(tot))
+    document.getElementById("ven").textContent = fileSize(dt.ven)
+    document.getElementById("inv").textContent = fileSize(dt.inv)
+    document.getElementById("usu").textContent = fileSize(dt.use)
+    document.getElementById("tot").textContent = fileSize(tot)
+
+    let data = [
+      {name:'Ventas',math: ((dt.ven/tot)*100)},
+      {name:'Inventario',math: ((dt.inv/tot)*100)},
+      {name:'Usuarios',math: ((dt.use/tot)*100)},
+    ];
+    
+    let por = parseFloat(((tot/limit)*100).toFixed(1))
+    totalRot = ((por / 100) * 180 * Math.PI) / 180;
+    animate()
+    render(data)
+  },1500)
 } 
 
 function init_m(){

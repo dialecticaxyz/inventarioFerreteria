@@ -6,29 +6,21 @@
 <title>Pedidos</title>
 <link href="/css/estilos.css" rel="stylesheet" type="text/css" media="all" />
 <style>
-.bs{text-align: end;}
 .contenTable{ height: calc(100vh - 50px);}
-.todoFecha{color: white;}
-.inputDate{ margin-bottom: 0px;}
-.pickCalendar{ height: 25px;}
-#fechaVentas_Txt{color: white;}
 </style>
 </head>
 <body onload="startDB();">
 <div class="conteMenu">
-  <span class="icon back" onclick="window.history.back()"></span>
-  <span onclick="sincroDBventas()" class="icon cloud-download-alt"></span>
-  <select data-filvent id="vendedores" onchange="saveText(event,true)"></select>
-  <div class="inputDate">
-    <div id="fechaVentas_Txt"></div>
-    <input data-filvent id="fechaVentas" onchange="saveText(event,true)" class="pickCalendar" type='date'/>
+  <div class="cajaIzq">
+    <span class="icon back" onclick="window.history.back()"></span>
+    <span id="conection" class=""></span>
+    <span onclick="sincroDBventas()" class="icon cloudDow"></span>
   </div>
+  <div id="fechaVentas_Txt"></div>
   <div>
-    <label class="todoFecha" for="todoFecha">Todos Dias</label>
-    <input data-filvent type="checkbox" onchange="checkbox(event,true)" id="todoFecha" >  
+    <span class="icon filter" onclick="lnk('filtro')"></span>
+    <span onclick="listVer()" class="icon menuBurger"></span>  
   </div>
-  <span id="conection" class=""></span>   
-  <span onclick="listVer()" class="icon menuSvg ojo"></span>  
 </div>  
 
 <div id="contedOcultador" class="contedOcultador"></div>
@@ -40,31 +32,26 @@
         <th>N°</th>
         <th>Vendedor</th>
         <th onclick="renderVentas(true,'txt','fechVent')" >fecha</th>
+        <th>Total</th>
         <th>ver</th>
       </tr>
     </thead>
     <tbody id="listaDitem"></tbody>
+    <tfoot id="tfootColm">
+      <tr>
+        <th></th>
+        <th></th>
+        <th>Total</th>
+        <th id="totVent"></th>
+        <th></th>
+      </tr>
+    </tfoot>
   </table>
 </div>
 
 <script src="../js/apiBakend.js"></script>
 <script src="../js/mainDB.js"></script>
 <script>
-async function cargaVendedores(){
-  return new Promise(function(resolve,reject){  
-    read_DB('usuario').then((dat)=>{
-      let outerHTMLvendor = `<option value="todos">Todos</option>`;
-      for (let i = 0; i < dat.length; i++){
-        const el = dat[i];
-        //if(el.rol=="admin"){ continue }
-        outerHTMLvendor += `<option value="${el.nom}">${el.nom}</option> `
-      }
-      document.querySelector("#vendedores").innerHTML = outerHTMLvendor;
-    })
-    resolve(true)
-  })
-}
-
 var listVen = []
 async function renderVentas(ord,typ,elm){
   listVen = []
@@ -82,6 +69,7 @@ async function renderVentas(ord,typ,elm){
   //ordenar
   listVen = await sortTable(ord,typ,elm,listVen)
   //ordenar
+  let total = 0
   var outerHTML = '';
   for (let i = 0; i < listVen.length; i++) {
     let el = listVen[i];
@@ -90,28 +78,28 @@ async function renderVentas(ord,typ,elm){
       <td>${i+1}</td>
       <td>${(el.dataVenden).nom}</td>
       <td>${timeToMesDia(el.fechVent)}</td>
+      <td class="bs">${el.total}</td>
       <td>
         <span onclick="verVenta('${el.id}')" class="icon Eyes">
       </td>
     </tr>`
+    total += el.total
   }
   document.querySelector("#listaDitem").innerHTML = outerHTML;
   manejoColumnas("tablaPedidos")
+  document.getElementById("totVent").textContent = total
 }
 
 function verVenta(idVent){
   localStorage.setItem('idVenta', idVent);
-  lnk("../ventasAdmin/formInfo_venta")
+  lnk("../ventaVer/ventaInfo")
 }
 
 async function init_m(){ 
   let fil = await storageJsonSetup("filvent",{"todoFecha":false,"fechaVentas":fecActInp,"vendedores":"todos"})
-  await json_to_from("filvent",fil)
-  await cargaVendedores()
+  document.getElementById("fechaVentas_Txt").textContent = fechaForma2(fil.fechaVentas) 
   await renderVentas()
-  //openSocket() 
 }   
-
 </script>
 </body>
 </html>

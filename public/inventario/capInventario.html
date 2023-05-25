@@ -6,21 +6,20 @@
 <title>INVENTARIO</title>
 <link href="../css/estilos.css" rel="stylesheet" type="text/css" media="all" />
 <style>
-.cantPed{width: 50px;}
-#conection{margin-left: 10px;}
-.cloud-download-alt{margin-right: 25px;}
-.buscador{display: flex;justify-content: center;}
-.BORRAR{margin-left: 15px;margin-top: 2px;margin-right: 10px;}
-.bs{text-align: end;}
 .contItemDat{display: flex;padding: 10px; justify-content: space-around;}
+.txTit{padding: 5px;font-weight: bold;}
+.conDat{text-align: center;}
 </style>
 </head>
 <body onload="startDB();">
 <div class="conteMenu">
-  <span class="icon back" onclick="window.history.back()"></span>
-  <span id="conection"></span>   
-  <span onclick="sincroDBinventario()" class="icon cloud-download-alt"></span>
-  <span onclick="listVer()" class="icon menuSvg ojo"></span>  
+  <div class="cajaIzq">
+    <span class="icon back" onclick="window.history.back()"></span>
+    <span id="conection"></span> 
+    <span onclick="sincroDBinventario()" class="icon cloudDow"></span>    
+  </div>
+  <div class="titMenu">CAPITAL</div>  
+  <span onclick="listVer()" class="icon menuBurger"></span>  
 </div>   
 
 <div class="buscador">
@@ -50,8 +49,14 @@
 </div>
 
 <div class="contItemDat">
-  <div>Cantidad de items : <span id="cantItem"></span></div>
-  <div>Capital total : <span id="cantCapt"></span> Bs.</div>
+  <div class="conDat">
+    <div class="txTit">items</div>
+    <div id="cantItem"></div>
+  </div>
+  <div class="conDat">
+    <div class="txTit">Capital</div>
+    <div><span id="cantCapt"></span> Bs.</div></div>
+  </div>
 </div>
 
 <script src="../js/apiBakend.js"></script>

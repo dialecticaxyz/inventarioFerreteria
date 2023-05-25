@@ -76,19 +76,21 @@
   margin-top: 8px;
 }
 /*boton config*/  
-#nombre{
-  text-align: center;
-  padding: 20px;
-  font-weight: bold;
-}
+
 .tituloIndex{
   text-align: center;
-  margin-top: 10px;
+  padding: 10px;
   font-size: 1.5em;
 }
+#nombre{
+  text-align: center;
+  padding: 5px;
+  font-weight: bold;
+}
+
 /********* enlaces **********/
 .contenGral{
-  height: calc(100vh - 120px);
+  height: calc(100vh - 100px);
   overflow-y: scroll;
 }
 .menu{
@@ -116,16 +118,15 @@
 </head>
 <body  onload="startDB();">
 <span id="butInstall" class="pulse"><span>Instalar</span></span>
-
 <h1 class="tituloIndex">FERRETERIA</h1>
-
 <div id="nombre"></div>
+
 <div id="contenGral" class="contenGral hiden">
   <div class="menu">
-    <a class="enlace" href="ventasVender/venderMovil.html">VENDER</a>
+    <a class="enlace" href="ventaVender/venderMovil.html">VENDER</a>
   </div>
   <div class="menu">
-    <a class="enlace" href="ventasAdmin/ventas.html">LISTA DE VENTAS</a>
+    <a class="enlace" href="ventaVer/ventasAdmin.html">LISTA DE VENTAS</a>
   </div>
   <div class="menu">
     <a class="enlace" href="inventario/inventario.html">IMVENTARIO</a>
@@ -139,13 +140,13 @@
   <br>
   <div class="menu">
     <a class="enlace" href="dataAdmin/sizeDB.html">Tamaño de Base de Datos</a>
-    <a class="enlace" href="dataAdmin/limpiar.html">Limpiar Datos Nube</a>
-    <a class="enlace" href="ventasArchivo/ventasArchivo.html">Ventas Archivados</a>
+    <a class="enlace" href="ventaVer/ventaOnliDelete.html">Limpiar Datos Nube</a>
+    <a class="enlace" href="ventaVer/ventasArchivo.html">Ventas Archivados</a>
     <a class="enlace" href="cargaExel/exelRegInventario.html">Registrar inventario exel</a>
   </div>
 </div>
 
-<div class="vercion">V2</div>
+<div class="vercion">V3</div>
 <div class="conf">
   <a class="btnConfg" href="login/login.html"><span class="iconUSECONFG"></span></a>
 </div>
@@ -158,7 +159,7 @@ function init_m(){
   }
 }
 
-/*boton instalacion pwa*/
+/*boton instalacion pwa
 let deferredInstallPrompt = null;
 const installButton = document.getElementById('butInstall');
 installButton.addEventListener('click', installPWA);
@@ -178,16 +179,16 @@ function installPWA(){
   });
 }
 window.addEventListener('appinstalled', logAppInstalled);
-function logAppInstalled(evt) { console.log('installed.', evt);} 
+function logAppInstalled(evt) { console.log('installed.', evt);} */
 /*boton instalacion pwa*/ 
 
-/*serviceWorker*/
+/*serviceWorker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw-admin.js')
     .then((reg) => { console.log('Service worker registered.'); });
   });
-}
+}*/
 /*serviceWorker*/
 </script>
 </body>

@@ -34,5 +34,5 @@ app.use('/', router);
 app.ws('/', handleWs);
 
 const server = app.listen(app.get('port'),()=>{ 
-  console.log("http://127.0.0.1 : "+ server.address().port) 
+  console.log("http://127.0.0.1:"+server.address().port) 
 });

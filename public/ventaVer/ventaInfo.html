@@ -6,23 +6,23 @@
 <title>PEDIDO</title>
 <link href="/css/estilos.css" rel="stylesheet" type="text/css" media="all" />
 <style>
-.formularioV1{ margin-top: 0px; max-width: 90%;}
 #productosList{
   overflow-y: scroll;
-  height: calc(100vh - 290px);
+  height: calc(100vh - 150px);
   margin-top: 5px;
 }
-
-.filP2 input{width: 50px;}
-.filP2{
-  display: flex;
-  justify-content: space-between;
+.totaoDat{
+  height: 15px;
 }
-.filP2a{display: flex;}
-.filP2a>div{margin-right: 5px;}
-.totalItm{
-  width: 60px;
-  text-align: end;
+.totaoDat>div{
+  display: flex;
+  width: 130px;
+  float: right;
+}
+#total{
+  font-weight: bold;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>
 </head>
@@ -33,7 +33,7 @@
   <span></span> 
 </div> 
 
-<div class="formularioV1">
+<div class="contendInfo">
   <div class="textDataInf">
     <div>Cliente :</div>
     <div data-cli id="cli" ></div>
@@ -46,22 +46,9 @@
 
 <div id="productosList" class="contenItems"></div>
 
-<div class="formularioV1">
-  <div class="ConTextDataInfT2">
-    <div class="textDataInfT2">
-      <div>Acuenta Bs.</div>
-      <div data-dat id="acuenta"></div>
-    </div>
-    <div class="textDataInfT2">
-      <div>Saldo: Bs.</div>
-      <div data-dat id="saldo"></div>
-    </div>
-    <div class="textDataInfT2">
-      <div>Total: Bs.</div>
-      <div data-dat id="total"></div>
-    </div>    
-  </div>
-</div>
+<div class="totaoDat">
+  <div>Total: <div data-dat id="total"></div> Bs.</div>
+</div>    
 
 <script src="../js/apiBakend.js"></script>
 <script src="../js/mainDB.js"></script>
@@ -69,7 +56,7 @@
 var idVent = localStorage.getItem('idVenta')
 var carrito
 async function llenarDatos(){
-  let datVen = await read_ID_DB(idVent,'archivo')
+  let datVen = await read_ID_DB(idVent,'ventas')
   carrito = datVen["proforma"]
   rederVenta()
   let datCli = datVen["cliente"]

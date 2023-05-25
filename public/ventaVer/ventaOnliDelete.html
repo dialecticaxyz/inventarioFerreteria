@@ -6,34 +6,21 @@
 <title>Pedidos</title>
 <link href="/css/estilos.css" rel="stylesheet" type="text/css" media="all" />
 <style>
-.bs{text-align: end;}
 .contenTable{ height: calc(100vh - 100px);}
-.todoFecha{color: white;}
-.inputDate{ margin-bottom: 0px;margin-right: 10px;}
-.pickCalendar{ height: 25px;}
-#fechaVentas_Txt{color: white;}
-.fecha{display: flex;align-items: center;}
-.numNot{margin-right: 10px; width: 60px;}
+.numNot{margin-right: 5px; width: 50px;}
 </style>
 </head>
 <body onload="startDB();">
 <div class="conteMenu">
   <span class="icon back" onclick="window.history.back()"></span>
-  <div class="fecha">
+  <div class="cajaIzq">
     <input class="numNot" id="numNot" type="number">
     <span class="icon save"  onclick="writeNumNot()" ></span>
   </div>
-  <select data-filvent id="vendedores" onchange="saveText(event,true)"></select>
-  <div class="inputDate">
-    <div id="fechaVentas_Txt"></div>
-    <input data-filvent id="fechaVentas" onchange="saveText(event,true)" class="pickCalendar" type='date'/>
-  </div>
-  <div>
-    <label class="todoFecha" for="todoFecha">Todos Dias</label>
-    <input data-filvent type="checkbox" onchange="checkbox(event,true)" id="todoFecha" >  
-  </div>
-  <span class="icon borrarWite" onclick="borrarMarc()"></span>  
-  <span onclick="listVer()" class="icon menuSvg ojo"></span>  
+  <div id="fechaVentas_Txt"></div>
+  <span class="icon borrarWite" onclick="borrarMarc()"></span>
+  <span class="icon filter" onclick="lnk('filtro')"></span> 
+  <span onclick="listVer()" class="icon menuBurger"></span>  
 </div>  
 
 <div id="contedOcultador" class="contedOcultador"></div>
@@ -55,21 +42,6 @@
 <script src="/js/apiBakend.js"></script>
 <script src="/js/mainDB.js"></script>
 <script>
-async function cargaVendedores(){
-  return new Promise(function(resolve,reject){  
-    read_DB('usuario').then((dat)=>{
-      let outerHTMLvendor = `<option value="todos">Todos</option>`;
-      for (let i = 0; i < dat.length; i++){
-        const el = dat[i];
-        //if(el.rol=="admin"){ continue }
-        outerHTMLvendor += `<option value="${el.nom}">${el.nom}</option> `
-      }
-      document.querySelector("#vendedores").innerHTML = outerHTMLvendor;
-    })
-    resolve(true)
-  })
-}
-
 var listVen = []
 async function renderVentas(ord,typ,elm){
   listVen = []
@@ -104,8 +76,6 @@ async function renderVentas(ord,typ,elm){
   manejoColumnas("tablaPedidos")
 }
 
-
-
 let ids = []
 function borrarArr(id){ ids.push(id)}
 
@@ -137,14 +107,12 @@ async function writeNumNot(){
 
 async function init_m(){ 
   let fil = await storageJsonSetup("filvent",{"todoFecha":false,"fechaVentas":fecActInp,"vendedores":"todos"})
-  await json_to_from("filvent",fil)
-  await cargaVendedores()
+  document.getElementById("fechaVentas_Txt").textContent = fechaForma2(fil.fechaVentas) 
   await renderVentas()
 
   let num = await readNumNota()
   document.getElementById("numNot").value = num
 }   
-
 </script>
 </body>
 </html>

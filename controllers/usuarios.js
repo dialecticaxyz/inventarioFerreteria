@@ -30,6 +30,7 @@ async function createdUse(req, rsp){///unique email
   req.body["_id"] = req.body["id"]
   req.body["time"] = Date.now()
   use.find({user: req.body["user"]}, (err, record)=>{
+    console.log(record)
     if(record.length!=0){
       rsp.status(200).send("exists")
     }else{
@@ -89,7 +90,7 @@ const updatePasword = async (req, res) => {
   });
 } 
 async function loginUser(req, rsp){
-  use.find({user: req.body["user"]},(err,record)=>{
+  use.find({"user":req.body["user"]},(err,record)=>{
     if(record.length!=0){
       let d = record[0]
       const token = req.headers["x-access-token"];

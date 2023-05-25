@@ -275,7 +275,7 @@ function checkbox(e,i){
   if(i==true){renderVentas()}
 }
 function dc2(n){ return parseFloat((n).toFixed(2)) }
-
+function dc1(n){ return parseFloat((n).toFixed(1)) }
 //////////////////////// MANEJO DE FORMULARIO //////////////////////////
 function json_to_from(idf,stg){
   return new Promise(function(resolve,reject){
@@ -327,16 +327,30 @@ function json_to_from(idf,stg){
     resolve(true)
   })
 }
-function form_to_json(id){
+function form_to_json(set){
   return new Promise(function(resolve,reject){
-    const f = document.querySelectorAll('[data-'+id+']')
+    const f = document.querySelectorAll('[data-'+set+']')
     let form = {}
     for (let i = 0; i < f.length; i++) {
       let id = f[i].id
       let val = f[i].value
       let tipo = f[i].type
       let tag = f[i].tagName
-      if(tipo=="number"){if(val==""){form[id]=0}else{form[id]=parseFloat(val)}}
+      if(tipo=="number"){
+        if(val==""){
+          if(f[i].dataset[set]=="text"){
+            form[id]=""
+          }else{
+            form[id]=0
+          }
+        }else{
+          if(f[i].dataset[set]=="text"){
+            form[id]=val
+          }else{
+            form[id]=parseFloat(val)
+          }
+        }
+      }
       if(tipo=="text"){form[id] = val}
       if(tipo=="password"){form[id] = val}
       if(tipo=="date"){form[id] = val}
@@ -383,7 +397,7 @@ function timeToMesDia(tim){//time 1655244456367
   let mes = d.getMonth()
   return (dia+" "+nombreMeses[mes])
 }
-function fechaForma2(f){// 10/Ene/2020
+function fechaForma2(f){//2023-05-20 -> 20/May./2023
   let fc = f.split("-")
   return (fc[2]+"/"+nombreMesesCorto[fc[1]-1] +"/"+fc[0])
 }
@@ -543,8 +557,12 @@ function establacerColumnas(listCol){
       fila[i].style.display = listCol["cr"+(i+1)]?"":"none"
     }
   }
+  let tfoot = document.getElementById("headColm").querySelectorAll("th")
+  for (let i = 0; i < tfoot.length; i++) {
+    listCol["cr"+(i+1)]
+    tfoot[i].style.display = listCol["cr"+(i+1)]?"":"none"
+  }
 }
 function listVer(){ document.getElementById("contedOcultador").classList.add("listVer") }
 function oculVer(){ document.getElementById("contedOcultador").classList.remove("listVer") }
-
 ///////////////////////////// secion manejo de tablas //////////////////////////////

@@ -8,7 +8,6 @@
 </head>
 <style>
 .btn-material{width: 180px;padding: 7px;}
-.tituloForm{  margin-bottom: -20px; }
 #created{background-color: rgb(54, 255, 47);padding: 15px;border-radius: 5px}
 #existe{background-color: rgb(255, 47, 47);padding: 15px;border-radius: 5px;color: white;}
 </style>
@@ -21,21 +20,21 @@
 
 <div class="formularioV1">
   <div class="contInput">
-    <input data-userReg id="nom" required class="input_ef" type="text" placeholder=""/>
+    <input data-user id="nom" required class="input_ef" type="text" placeholder=""/>
     <label class="label_ef">Nombre</label>
   </div>
   <div class="contInput">
-    <input data-userReg id="user" required class="input_ef" type="number" placeholder=""/>
+    <input data-user="text" id="user" required class="input_ef" type="number" placeholder=""/>
     <label class="label_ef">Usuario (celular)</label>
   </div>
   <div class="contInput">
-    <input data-userReg id="password" required class="input_ef" type="password" placeholder=""/>
+    <input data-user id="password" required class="input_ef" type="password" placeholder=""/>
     <label class="label_ef">Contraseña</label>
   </div>
   <div class="txtAndSelector">
     <div class="textSelec">Rol:</div> 
     <div class="selectTip1">
-      <select class="selector" data-userReg required onchange="saveText(event)"  id="rol">
+      <select class="selector" data-user required id="rol">
         <option value="ninguno" selected>Ninguno</option>
         <option value="admin">Administrar</option>
         <option value="vend">Vender</option>
@@ -63,13 +62,11 @@
 
 async function registrar(){
   document.getElementById("existe").style.display="none"
-
-  let val = await form_to_json("userReg")
+  let val = await form_to_json("user")
   if(val.rol=="ninguno"){alert("Seleccione Rol");return;}
   loadData()
   val["id"] = new Date().getTime().toString()
   let reg = await createdUse(val)
-  
   if(reg=="created"){
     document.getElementById("created").style.display=""
     document.getElementById("btnGuar").classList.add("hiden")
