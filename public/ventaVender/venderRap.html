@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>PEDIDO</title>
+<link href="../css/estilos.css" rel="stylesheet" type="text/css" media="all" />
+<style>
+.contMain{
+  background-color: aquamarine;
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 30px);
+}  
+/* Item Inventario */
+.contItem{
+  background-color: cadetblue;
+  width: 100%;
+  padding: 5px;
+  overflow-y: scroll;
+  height: 550px;
+} 
+.item{
+  background-color: rgb(224, 224, 224);
+  width: 100%;
+  border-radius: 5px;
+  margin: auto;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+.fila1{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.fila1a{
+  font-weight: bold;
+}
+.fila1b{
+  display: flex;
+}
+.fila1b>span{ margin-left: 10px; }
+.marcado{
+  background-color: rgb(162, 255, 149);
+}
+.disponible{font-weight: bold;}
+.fila3{
+  display: flex;
+  justify-content: space-between;
+}
+.precio{font-weight: bold;}
+.cambioPu{ 
+  background-color: #ffffff;
+  padding: 2px;
+  border-radius: 2px;
+  width: 35px;
+  margin-top: -3px;
+  margin-left: 5px;
+}
+.totalItm{
+  width: 60px;
+  text-align: end;
+}
+/* Item Inventario */ 
+
+.contLet{
+  width: 50px;
+}
+#contConso{
+  background-color: aqua;
+  height: calc(100vh - 200px);
+  overflow-y: scroll;
+}
+.letra{
+  width: 24px;
+  margin: auto;
+  margin-top: 7px;
+  padding: 5px;
+  background-color: #ffffff;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),0 2px 2px 0 rgba(0, 0, 0, 0.14),0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  font-size: inherit;
+  line-height: inherit;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body onload="startDB();">
+<div class="conteMenu">
+  <div class="cajaIzq">
+    <span class="icon back" onclick="window.history.back()"></span>
+    <span id="conection" class=""></span>
+  </div>
+  <div id="palabra"></div>
+  <span class="iconMed borrarWite" onclick="delLetra()"></span>
+</div>  
+
+<div class="contMain">
+  <div class="contItem" id="contenItem"></div>
+  <div class="contLet">
+    <div id="contConso"></div>
+  </div>
+</div>
+
+<script src="../js/apiBakend.js"></script>
+<script src="../js/mainDB.js"></script>
+<script>
+var invData
+async function filtInit(dat){
+  let letras = []
+  for (let i = 0; i < dat.length; i++) {
+    const letr = (dat[i].produ).charAt(0).toUpperCase();
+    if(!letras.includes(letr)){ letras.push(letr) }
+  }
+  renderLetras(letras)
+}
+function renderLetras(letras){
+  letras = letras.sort()
+  let outerHTML = '';
+  for (let i = 0; i< letras.length; i++) {
+    const et = letras[i];
+    outerHTML += `<div onclick="pusLetra('${et}')" class="letra">${et}</div>` 
+  }
+  document.querySelector("#contConso").innerHTML = outerHTML;
+}
+async function renderDatos(dat){
+  let outerHTML = '';
+  for (let i = 0; i< dat.length; i++) {
+    const et = dat[i];
+    outerHTML += 
+    `<div class="item" id="${et.id}">
+      <div class="fila1">
+        <div class="fila1a" data-itm id="ref_${et.id}">${et.produ}</div>
+        <div class="fila1b">${et.marca}</div>
+      </div>
+      <div class="fila3">
+        <div><span class="disponible">55</span> <span>PZA</span></div>
+        <span onclick="alCarrito('${et.id}')" class="icon shopCardBlack"></span> 
+        <div><span class="precio">${et.puVent}</span> bs.</div>  
+      </div>
+    </div>` 
+  }
+  document.querySelector("#contenItem").innerHTML = outerHTML;
+}
+
+
+let letrasBus = []
+function pusLetra(l){
+  letrasBus.push(l)
+  letraBusq()
+}
+function letraBusq(){
+  let canLt = letrasBus.length
+  const last = letrasBus[canLt-1];
+  let flt = invData.filter( e => (e.produ.substring(0,canLt).toUpperCase())==letrasBus.join('') );
+  renderDatos(flt)
+  let grep = []
+  for (let i = 0; i < flt.length; i++) {
+    let lt = flt[i].produ[canLt].toUpperCase()
+    if(!grep.includes(lt)){ grep.push(lt) }
+  }
+  if(grep.length==1){
+    dd = flt
+    llenado()
+  }else{
+    renderLetras(grep)
+    document.getElementById("palabra").textContent = letrasBus.join('')
+  }
+}
+
+let ll = []
+let dd 
+function llenado(){
+  let grep = []
+  let lt
+  for (let i = 0; i < dd.length; i++) {
+    if(dd.length==1){
+      document.getElementById("palabra").textContent = dd[i].produ.toUpperCase()
+      renderLetras(grep)
+      letrasBus = ll
+      return
+    }
+    if(dd[i].produ.length==ll.length){
+      document.getElementById("palabra").textContent = dd[i].produ.toUpperCase()
+      renderLetras(grep)
+      letrasBus = ll
+      return
+    }
+    lt = dd[i].produ[ll.length].toUpperCase()
+    if(!grep.includes(lt)){ grep.push(lt) }
+  }
+  if(grep.length==1){ 
+    ll.push(lt)
+    llenado() 
+  }else{
+    document.getElementById("palabra").textContent = ll.join('')
+    letrasBus = ll
+    renderLetras(grep)
+  }
+}
+
+function delLetra(){
+  ll = []
+  letrasBus.pop()
+  borrado()
+}
+function borrado(){
+  let grep = []
+  let flt = invData.filter( e => (e.produ.substring(0,letrasBus.length).toUpperCase())==letrasBus.join('') );
+  for (let i = 0; i < flt.length; i++) {
+      let lt = flt[i].produ[letrasBus.length].toUpperCase()
+    if(!grep.includes(lt)){ grep.push(lt) }
+  }
+  if(grep.length==1){
+    letrasBus.pop()
+    borrado()
+  }else{
+    letraBusq()
+  }
+}
+
+async function init_m(){  
+  invData = await read_DB('inventario')
+  filtInit(invData)
+  renderDatos(invData)
+}
+</script>
+</body>
+</html>

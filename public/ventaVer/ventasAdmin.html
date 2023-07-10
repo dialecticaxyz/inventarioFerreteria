@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pedidos</title>
+<title>Ventas</title>
 <link href="/css/estilos.css" rel="stylesheet" type="text/css" media="all" />
 <style>
 .contenTable{ height: calc(100vh - 50px);}
@@ -31,8 +31,10 @@
       <tr id="headColm">
         <th>N°</th>
         <th>Vendedor</th>
-        <th onclick="renderVentas(true,'txt','fechVent')" >fecha</th>
+        <th onclick="renderVentas(true,'txt','fechVent')" >fecha <span class="of"></span></th>
         <th>Total</th>
+        <th>Capt.</th>
+        <th>Util.</th>
         <th>ver</th>
       </tr>
     </thead>
@@ -42,7 +44,9 @@
         <th></th>
         <th></th>
         <th>Total</th>
-        <th id="totVent"></th>
+        <th id="totalTab"></th>
+        <th id="capitTab"></th>
+        <th id="utiliTab"></th>
         <th></th>
       </tr>
     </tfoot>
@@ -69,25 +73,45 @@ async function renderVentas(ord,typ,elm){
   //ordenar
   listVen = await sortTable(ord,typ,elm,listVen)
   //ordenar
-  let total = 0
+  //totales tabla
+  let totalTab = 0
+  let capitTab = 0
+  let utiliTab = 0
+  //totales tabla
   var outerHTML = '';
   for (let i = 0; i < listVen.length; i++) {
+    //calculo capital
+    let capVent = 0
+    let prof = listVen[i].proforma
+    for (const key in prof) {
+      const item = prof[key];
+      capVent += (item.puComp)*(item.cant)  
+    }
+    //calculo capital
     let el = listVen[i];
+    let util = el.total-capVent
     outerHTML += 
     `<tr id="${el.id}">
       <td>${i+1}</td>
       <td>${(el.dataVenden).nom}</td>
       <td>${timeToMesDia(el.fechVent)}</td>
       <td class="bs">${el.total}</td>
+      <td class="bs">${capVent}</td>
+      <td class="bs">${util.toFixed(1)}</td>
       <td>
         <span onclick="verVenta('${el.id}')" class="icon Eyes">
       </td>
     </tr>`
-    total += el.total
+    totalTab += el.total
+    capitTab += capVent
+    utiliTab += util
   }
   document.querySelector("#listaDitem").innerHTML = outerHTML;
   manejoColumnas("tablaPedidos")
-  document.getElementById("totVent").textContent = total
+
+  document.getElementById("totalTab").textContent = totalTab.toFixed(1)
+  document.getElementById("capitTab").textContent = capitTab.toFixed(1)
+  document.getElementById("utiliTab").textContent = utiliTab.toFixed(1)
 }
 
 function verVenta(idVent){
